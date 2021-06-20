@@ -1,5 +1,8 @@
-./test.c
-./*.out
-./*.psd
-./*.old
-./*.oldc
+test.c
+*.out
+*.psd
+*.old
+*.oldc
+test/*.o
+test/*.d
+test/testreader
