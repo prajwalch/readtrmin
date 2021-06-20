@@ -1,8 +1,3 @@
-test.c
-*.out
-*.psd
-*.old
-*.oldc
-test/*.o
-test/*.d
+*.[oa]
+test/*.[od]
 test/testreader

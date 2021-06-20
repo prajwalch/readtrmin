@@ -25,17 +25,9 @@ static void error_and_exit(const char *message)
   exit(EXIT_FAILURE);
 }
 
-static void info_and_exit(const char *message)
-{
-  //fprintf(stderr, "%s", message);
-  DEBUG_INFO(message);
-  exit(EXIT_FAILURE);
-}
-
 static bool is_whitespace(char byte)
 {
-  printf("is lf: %i\n", byte == '\n');
-  if ((isspace(byte) && isblank(byte)) || byte == '\n') {
+  if (isspace(byte) && isblank(byte)) {
     return true;
   }
 
@@ -298,66 +290,41 @@ static void read_single_byte(void *pointer_arg, char *buffer, ReadingMode mode)
   }
 }
 
-static size_t verify_buffer_size(size_t buffer_size, ReadingMode mode)
-{
-  if (buffer_size != 2 
-      && (mode == SINGLE_CHAR 
-        || mode == SINGLE_INT)) {
-    return 0;
-  }
-
-  if (buffer_size < 1 
-      && (mode != SINGLE_CHAR 
-        || mode != SINGLE_INT)) {
-    return 0;
-  }
-  return buffer_size;
-}
-
 static size_t verify_input_len(size_t input_len, 
     ReadingMode mode)
 {
-  if (input_len != 1 
-      && (mode == SINGLE_CHAR || mode == SINGLE_INT)) {
-    return DEFAULT_MIN_BYTE_ALLOWED;
-  }
+  if (input_len != DEFAULT_LEN 
+      && (mode == SINGLE_CHAR 
+        || mode == SINGLE_INT))
+    return 0;
 
-  if ((input_len != 1 || input_len < 1) 
-      && (mode != SINGLE_CHAR || mode != SINGLE_INT)) {
-    return DEFAULT_MAX_BYTE_ALLOWED;
-  }
+  if ((input_len != DEFAULT_LEN 
+        || input_len < DEFAULT_LEN)
+      && (mode != SINGLE_CHAR 
+        || mode != SINGLE_INT))
+    return 0;
 
   return input_len;
- }
+}
 
 void read_console_input(void *pointer_arg, 
     size_t max_input_len, 
-    size_t max_buffer_size, 
     ReadingMode mode)
 {
-  size_t buffer_size = verify_buffer_size(max_buffer_size, mode);
   size_t max_byte_toread = verify_input_len(max_input_len, mode);
 
-  if (buffer_size == 0)
-    error_and_exit("buffer size shouldn't be less then 1");
-
-  if (max_byte_toread >= buffer_size)
-    max_byte_toread = buffer_size - 1;
-
-  if (max_byte_toread == 0)
-    error_and_exit("couldn't perform action on max byte zero");
-
-  printf("max byte: %i\n", max_byte_toread);
-  printf("max buff: %i\n", buffer_size);
+  if (max_byte_toread == 0) {
+    DEBUG_ERROR("invalid max input len, it should be 1 (DEFAULT_LEN) on SINGLE_CHAR/SINGLE_INT mode and greater or equal to 1 on other modes");
+    return;
+  }
 
   // raw input/buffer which we read from the console
-  char console_buffer[buffer_size];
-  memset(console_buffer, 0, buffer_size);
+  char console_buffer[max_byte_toread + NULL_BYTE];
+  memset(console_buffer, 0, sizeof(console_buffer));
 
   switch (mode) {
     case (SINGLE_CHAR):
     case (SINGLE_INT):
-      DEBUG_LOG("single byte");
       read_single_byte(pointer_arg, console_buffer, mode);
       break;
     case (SINGLE_WORD):
@@ -366,7 +333,7 @@ void read_console_input(void *pointer_arg,
     case (GROUP_INT):
       read_multi_byte(pointer_arg, 
           console_buffer, 
-          buffer_size, 
+          sizeof(console_buffer), 
           max_byte_toread, 
           mode);
       break;

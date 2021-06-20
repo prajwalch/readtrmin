@@ -1,13 +1,15 @@
 #pragma once
 
+#define DEFAULT_LEN 1
+
 #define DEBUG_LOG(m) \
-  printf("[log]: %s\n", m);
+  printf("%s\n", m);
 #define DEBUG_INFO(m) \
-  printf("\033[1;32m[info]: %s\033[0m\n", m);
+  printf("\033[1;32minfo: \033[0m\033[1;37m%s\033[0m\n", m);
 #define DEBUG_WARNING(m) \
-  printf("\033[1;33m[warning]: %s\033[0m\n", m);
+  printf("\033[1;33mwarning: \033[0m\033[1;37m%s\033[0m\n", m);
 #define DEBUG_ERROR(m) \
-  fprintf(stderr, "\033[1;31m[error]: %s\033[0m\n", m);
+  fprintf(stderr, "\033[1;31merror: \033[0m\033[1;37m%s\033[0m\n", m);
 
 enum ReaderModes {
   SINGLE_CHAR,
@@ -21,5 +23,4 @@ typedef enum ReaderModes ReadingMode;
 
 void read_console_input(void *pointer_arg, 
     size_t max_input_len, 
-    size_t max_buffer_len, 
     ReadingMode mode);
