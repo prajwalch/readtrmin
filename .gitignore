@@ -1,4 +1,4 @@
 *.[oad]
 test/*.[od]
 test/testreader
-/*.txt
+*.txt
