@@ -5,10 +5,6 @@
 * make
 * clang/gcc (v9.0.0 or above)
 
-## Key Features
-
-
-
 ## How To Build And Install
 
 The build is Makefile based. After cloning the repository, run the following commands.
