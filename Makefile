@@ -18,7 +18,11 @@ all: readtrmin install
 clean_all: clean uninstall
 
 .PHONY: readtrmin
-readtrmin: $(LIB_FILE)
+readtrmin: make_lib_folder $(LIB_FILE)
+
+.PHONY: make_lib_folder
+make_lib_folder:
+	mkdir lib
 
 $(LIB_FILE): $(LIB_OBJS)
 	$(CC) -shared -fPIC -o $@ $^
