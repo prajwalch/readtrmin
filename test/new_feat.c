@@ -45,11 +45,23 @@ find_mode(char *format)
 
 int main(void)
 {
+  //PCXString my_name = new_pcxstring(6);
   ReaderMode mode = find_mode("%");
   if (mode == INVALID_MODE)
     fprintf(stderr, "invalid mode\n");
   return 0;
+  char pointer_arg = 0;
 
+  ReaderStatus status = read_console_input(1, mode, &pointer_arg);
+}
+
+ReaderStatus read_console_input(int max_input_len, ReaderMode, void *pointer_arg)
+{
+  /*
+   * it verifies the length according to mode
+   * 1 (DEFAULT_LEN): for 
+  */
+  int verified_input_len = verify_input_len(max_input_len);
 }
 
 

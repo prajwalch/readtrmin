@@ -1,40 +1,40 @@
-CFLAGS = -Wall -Wextra
+DEBUG = 0
+CFLAGS = -DNDEBUG -MMD -O2
 
-LIB_SRCS = input_reader.c
-LIB_OBJ = input_reader.o
+ifeq ($(DEBUG), 1)
+	CFLAGS = -g -Wall -Werror -Wextra -DDEBUG
+endif
 
-TEST_SRCS = ./test/test.c
-TEST_OBJS = ./test/test.o
-TEST_DEPS = ./test/test.d
-TEST_BIN = ./test/testreader
-TEST_CFLAGS = $(CFLAGS) -MMD -I./
+LIB_FOLDER = ./lib
+LIB_SRCS = readtrmin.c
+LIB_OBJS = $(LIB_SRCS:%.c=%.o)
+LIB_DEPS = $(LIB_OBJS:%.o=%.d)
+LIB_NAME = libreadtrmin.so
+LIB_FILE = $(LIB_FOLDER)/$(LIB_NAME)
 
-all: inputreader test
+all: readtrmin install
 
-test: $(TEST_BIN)
+.PHONY: clean_all
+clean_all: clean uninstall
 
-inputreader: $(LIB_OBJ)
-	ar rcs libinputreader.a $^
+.PHONY: readtrmin
+readtrmin: $(LIB_FILE)
 
-$(LIB_OBJ): $(LIB_SRCS)
+$(LIB_FILE): $(LIB_OBJS)
+	$(CC) -shared -fPIC -o $@ $^
+
+-include ($(LIB_DEPS))
+%.o: %.c
 	$(CC) $(CFLAGS) -c $^ -o $@
 
-$(TEST_BIN): $(TEST_OBJS)
-	$(CC) $^ -L. -linputreader -o $@
+.PHONY: install
+install: uninstall
+	cp $(LIB_FILE) $(LD_LIBRARY_PATH)
 
--include ($(TEST_DEPS));
+.PHONY: uninstall
+uninstall:
+	$(RM) $(LD_LIBRARY_PATH)/$(LIB_NAME)
 
-$(TEST_OBJS): $(TEST_SRCS)
-	$(CC) $(TEST_CFLAGS) -c $^ -o $@
-
-.PHONEY: clean_all
-clean_all: clean_lib clean_test
-
-.PHONEY: clean_lib
-clean_lib:
-	rm -rf input_reader.o lib*
-
-.PHONEY: clean_test
-clean_test:
-	rm -rf $(TEST_OBJS) $(TEST_DEPS) $(TEST_BIN)
-
+.PHONY: clean
+clean:
+	$(RM) $(LIB_OBJS) $(LIB_DEPS) $(LIB_FILE)

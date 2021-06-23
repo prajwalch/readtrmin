@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stddef.h>
+
 #define DEFAULT_LEN 1
 
 #define DEBUG_LOG(m) \

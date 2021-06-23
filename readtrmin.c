@@ -1,17 +1,19 @@
+#include "readtrmin.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
 #include <assert.h>
-#include "input_reader.h"
 
 #define DEFAULT_MIN_BYTE_ALLOWED 1
 #define DEFAULT_MAX_BYTE_ALLOWED 4
 #define DEFAULT_MIN_BUFFER_SIZE 2
 #define DEFAULT_MAX_BUFFER_SIZE 5
 #define NULL_BYTE 1
-#define BUFFER_OVERFLOW_MESSAGE "found buffer overflow"
+
+#define BUFFER_OVERFLOW_MESSAGE "found buffer overflow and rest of the overflowed characters are trimmed"
 #define STRING_FOUND_SPACE_MSG "expected only alphabet letters but also found a space/empty on it"
 #define STRING_FOUND_NUMBER_MSG "expected only alphabet letters but also found a number on it"
 #define STRING_FOUND_SYMBOL_MSG "expected only alphabet letters but also found a symbol on it"
@@ -94,6 +96,12 @@ static bool has_symbol(char *buffer,
 
 // -----------check functions-----------
 
+static void check_for_null_input(char *buffer)
+{
+  if (buffer[0] == '\0')
+    error_and_exit("expected some input but found nothing");
+}
+
 static void check_for_whitespace(char *buffer, size_t buffer_length, char *msg)
 {
   if (has_whitespace(buffer, buffer_length))
@@ -175,18 +183,20 @@ static void STRING_set_pointer_arg(char *pointer_arg, char *buffer, size_t buffe
 
 static void SB_fix_buff_overflow(char *buffer)
 {
-  if (has_buffer_overflow(buffer, 2)) {
+  if (has_buffer_overflow(buffer, DEFAULT_MIN_BUFFER_SIZE)) {
     flush_input_buffer();
     DEBUG_WARNING(BUFFER_OVERFLOW_MESSAGE);
   }
-
-  set_null_terminator(buffer, 1);
+  if (buffer[0] == '\n')
+    set_null_terminator(buffer, 0);
+  else
+    set_null_terminator(buffer, 1);
   return;
 }
 
 static void SB_write_buffer(char *buffer)
 {
-  get_buffer(buffer, 2);
+  get_buffer(buffer, DEFAULT_MIN_BUFFER_SIZE);
   SB_fix_buff_overflow(buffer);
 }
 
@@ -202,7 +212,6 @@ static void MB_fix_buff_overflow(char *buffer,
     *buffer_length = expected_LF_position;
   } else {
     size_t LF_position = find_LF_position(buffer, *buffer_length);
-    assert(LF_position != 0);
 
     if (LF_position > expected_LF_position)
       LF_position = expected_LF_position;
@@ -230,6 +239,7 @@ static void read_multi_byte(void *pointer_arg,
 
   if (mode == SINGLE_WORD) {
     DEBUG_LOG("detected single word");
+    check_for_null_input(buffer);
     check_for_whitespace(buffer, buffer_new_len, STRING_FOUND_SPACE_MSG);
 
     check_for_number(buffer, buffer_new_len, STRING_FOUND_NUMBER_MSG);
@@ -240,6 +250,7 @@ static void read_multi_byte(void *pointer_arg,
     return;
   }
   if (mode == SINGLE_ALPHANUMERIC_WORD) {
+    check_for_null_input(buffer);
     check_for_whitespace(buffer, buffer_new_len, STRING_FOUND_SPACE_MSG);
 
     check_for_symbol(buffer, buffer_new_len, STRING_FOUND_SYMBOL_MSG);
@@ -249,6 +260,7 @@ static void read_multi_byte(void *pointer_arg,
   }
 
   if (mode == WORD_SENTENCE) {
+    check_for_null_input(buffer);
     check_for_number(buffer, buffer_new_len, STRING_FOUND_NUMBER_MSG);
 
     STRING_set_pointer_arg((char *)pointer_arg, buffer, buffer_new_len + 1);
@@ -256,6 +268,7 @@ static void read_multi_byte(void *pointer_arg,
   }
 
   if (mode == GROUP_INT) {
+    check_for_null_input(buffer);
     check_for_whitespace(buffer, 
         buffer_new_len, INT_FOUND_WHITESPACE_MSG);
 
@@ -271,22 +284,19 @@ static void read_single_byte(void *pointer_arg, char *buffer, ReadingMode mode)
   SB_write_buffer(buffer);
 
   if (mode == SINGLE_CHAR) {
-    if (is_whitespace(buffer[0]) || buffer[0] == '\n')
-      error_and_exit("expected only a alphabet letter but found space");
-
-    if (isdigit(buffer[0]))
-      error_and_exit("expected only a alphabet but found a number");
+    check_for_null_input(buffer);
+    check_for_whitespace(buffer, 
+        DEFAULT_MIN_BUFFER_SIZE, STRING_FOUND_SPACE_MSG);
+    
+    check_for_number(buffer, 
+        DEFAULT_MIN_BUFFER_SIZE, STRING_FOUND_NUMBER_MSG);
     STRING_set_pointer_arg(pointer_arg, buffer, 1);
   }
 
   if (mode == SINGLE_INT) {
-    if (is_whitespace(buffer[0]) || buffer[0] == '\n')
-      error_and_exit("expected only a number but found space");
-
-    if (isalpha(buffer[0]))
-      error_and_exit("expected only a number but found a alphabet letter");
-
-    INT_set_pointer_arg((int *)pointer_arg, buffer);
+   check_for_null_input(buffer);
+   check_for_alphabet(buffer, DEFAULT_MIN_BUFFER_SIZE, INT_FOUND_ALPHABET_MSG);
+   INT_set_pointer_arg((int *)pointer_arg, buffer);
   }
 }
 
@@ -299,7 +309,7 @@ static size_t verify_input_len(size_t input_len,
     return 0;
 
   if ((input_len != DEFAULT_LEN 
-        || input_len < DEFAULT_LEN)
+        && input_len < DEFAULT_LEN)
       && (mode != SINGLE_CHAR 
         || mode != SINGLE_INT))
     return 0;
@@ -311,6 +321,7 @@ void read_console_input(void *pointer_arg,
     size_t max_input_len, 
     ReadingMode mode)
 {
+  assert(max_input_len >= 1);
   size_t max_byte_toread = verify_input_len(max_input_len, mode);
 
   if (max_byte_toread == 0) {
@@ -338,7 +349,7 @@ void read_console_input(void *pointer_arg,
           mode);
       break;
     default:
-      printf("error");
+      DEBUG_LOG("error");
       break;
   }
 }
