@@ -6,7 +6,7 @@
 
 #include "util/str_util.h"
 
-#define MIN_BUFFER_SIZE 3
+#define MIN_BUFFER_SIZE 2
 #define NULL_BYTE 1
 
 const StringOptions default_string_option = { 
@@ -103,8 +103,6 @@ readtrmin_char(char *const pointer_arg)
 
   if (has_buffer_overflow(buffer, MIN_BUFFER_SIZE)) {
     set_null_terminator(buffer, 1);
-  } else {
-    replace_LF_with_NUL(buffer, MIN_BUFFER_SIZE, 1);
   }
 
   if (is_null_input(buffer)) {

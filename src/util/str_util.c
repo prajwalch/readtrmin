@@ -131,7 +131,7 @@ has_buffer_overflow(char *buffer,
 bool 
 get_input(char *buffer, size_t buffer_size)
 {
-  if (fgets(buffer, buffer_size + 1, stdin) == NULL) {
+  if (fgets(buffer, buffer_size, stdin) == NULL) {
     print_error("expected some input but found nothing");
     return false;
   }
