@@ -1,12 +1,11 @@
 DEBUG = 0
 CFLAGS = -DNDEBUG -MMD -O2
-
 ifeq ($(DEBUG), 1)
 	CFLAGS = -g -Wall -Werror -Wextra -DDEBUG
 endif
 
 LIB_FOLDER = ./lib
-LIB_SRCS = readtrmin.c
+LIB_SRCS = ./src/readtrmin_new.c ./src/util/str_util.c
 LIB_OBJS = $(LIB_SRCS:%.c=%.o)
 LIB_DEPS = $(LIB_OBJS:%.o=%.d)
 LIB_NAME = libreadtrmin.so
@@ -28,6 +27,7 @@ $(LIB_FILE): $(LIB_OBJS)
 	$(CC) -shared -fPIC -o $@ $^
 
 -include ($(LIB_DEPS))
+
 %.o: %.c
 	$(CC) $(CFLAGS) -c $^ -o $@
 

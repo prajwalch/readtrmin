@@ -1,4 +1,4 @@
-CFLAGS = -g -Wall -Werror -Wextra -DDEBUG -MMD -I../
+CFLAGS = -g -Wall -Werror -Wextra -DDEBUG -MMD -I../src
 TEST_SRCS = test.c
 TEST_OBJS = test.o
 TEST_DEPS = test.d
