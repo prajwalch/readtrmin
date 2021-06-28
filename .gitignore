@@ -2,3 +2,4 @@
 test/*.[od]
 test/testreader
 *.txt
+/lib
