@@ -13,20 +13,20 @@ typedef struct StringOptions {
 } StringOptions;
 
 bool 
-readtrmin_char(char *const pointer_arg);
+readtrmin_char(char *pointer_arg);
 
 bool
-readtrmin_string(char *const buffer_arg, 
+readtrmin_string(char *buffer_arg, 
                  size_t buffer_size, 
                  size_t max_input_len, 
                  StringOptions *string_option);
 
 bool 
-readtrmin_int(int *const pointer_arg, 
+readtrmin_int(int *pointer_arg, 
               size_t  max_input_len);
 
 /*bool 
-  readtrmin_float(double *const pointer_arg, 
+  readtrmin_float(double *pointer_arg, 
   size_t const  max_input_len);
   */
 #endif

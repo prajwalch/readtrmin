@@ -12,28 +12,28 @@ void
 print_error(const char *message);
 
 bool 
-has_lowercase(char *buffer, size_t buffer_length);
+has_lowercase(const char *buffer, size_t buffer_length);
 
 bool 
-has_uppercase(char *buffer, size_t buffer_length);
+has_uppercase(const char *buffer, size_t buffer_length);
 
 bool 
-has_symbol(char *buffer, size_t buffer_length);
+has_symbol(const char *buffer, size_t buffer_length);
 
 bool 
-has_number(char *buffer, size_t buffer_length);
+has_number(const char *buffer, size_t buffer_length);
 
 bool 
-has_whitespace(char *buffer, size_t buffer_length);
+has_whitespace(const char *buffer, size_t buffer_length);
 
 bool 
-is_null_input(char *buffer);
+is_null_input(const char *buffer);
 
 void 
 flush_input_buffer();
 
 size_t 
-find_LF_position(char *buffer, size_t buffer_length);
+find_LF_position(const char *buffer, size_t buffer_length);
 
 void 
 set_null_terminator(char *buffer, size_t index);
@@ -44,7 +44,7 @@ replace_LF_with_NUL(char *buffer,
                     size_t expected_LF_index);
 
 bool 
-has_buffer_overflow(char *buffer, 
+has_buffer_overflow(const char *buffer, 
                     size_t buffer_length);
 
 bool 

@@ -18,7 +18,7 @@ const StringOptions default_string_option = {
 };
 
 bool 
-readtrmin_string(char *const buffer_arg, 
+readtrmin_string(char *buffer_arg, 
                  size_t buffer_size, 
                  size_t  max_input_len, 
                  StringOptions *string_option)
@@ -91,7 +91,7 @@ readtrmin_string(char *const buffer_arg,
 }
 
 bool 
-readtrmin_char(char *const pointer_arg)
+readtrmin_char(char *pointer_arg)
 {
   *pointer_arg = 0;
   char buffer[MIN_BUFFER_SIZE];
@@ -103,6 +103,8 @@ readtrmin_char(char *const pointer_arg)
 
   if (has_buffer_overflow(buffer, MIN_BUFFER_SIZE)) {
     set_null_terminator(buffer, 1);
+  } else {
+    replace_LF_with_NUL(buffer, MIN_BUFFER_SIZE, 1);
   }
 
   if (is_null_input(buffer)) {
