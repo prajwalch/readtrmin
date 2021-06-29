@@ -130,7 +130,7 @@ readtrmin_string(char *buffer_arg,
 
   if (!string_option->allow_uppercase) {
     if (has_uppercase(buffer_arg, buffer_length)) {
-      print_error("uppercase are not allowed, as iit is disabled on option");
+      print_error("uppercase are not allowed, as it is disabled on option");
       clear_buffer(buffer_arg, buffer_size);
       return false;
     } 
