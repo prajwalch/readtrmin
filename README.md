@@ -1,5 +1,3 @@
-# ReadTrmIn
-=======
 # ReadTrmIn (Read Terminal Input)
 **safe and simple terminal input reader**
 
