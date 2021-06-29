@@ -1,4 +1,4 @@
-#include "readtrmin_new.h"
+#include "readtrmin.h"
 
 #include <ctype.h>
 #include <assert.h>
