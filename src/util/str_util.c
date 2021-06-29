@@ -2,12 +2,19 @@
 
 #include <stdio.h>
 #include <ctype.h>
+#include <string.h>
 
 void 
 print_error(const char *message)
 {
   TRM_ERROR(message);
   return;
+}
+
+void 
+clear_buffer(char *buffer, size_t buffer_size)
+{
+  memset(buffer, 0, buffer_size);
 }
 
 typedef int (*CallBackFunc_t)(int);
@@ -67,7 +74,7 @@ has_whitespace(const char *buffer, size_t buffer_length)
 bool 
 is_null_input(const char *buffer)
 {
-  if (buffer[0] == '\0' || buffer[0] == ' ')
+  if (buffer[0] == '\0')
     return true;
   return false;
 }
@@ -77,6 +84,12 @@ flush_input_buffer()
 {
   int c = 0;
   while ((c = getchar()) != '\n' && (c != EOF));
+}
+
+void
+set_null_terminator(char *buffer, size_t index)
+{
+  buffer[index] = '\0';
 }
 
 size_t 
@@ -92,23 +105,23 @@ find_LF_position(const char *buffer,
   return buffer_size + 1;
 }
 
-void
-set_null_terminator(char *buffer, size_t index)
-{
-  buffer[index] = '\0';
-}
-
 size_t 
 replace_LF_with_NUL(char *buffer, 
                     size_t buffer_size, 
                     size_t expected_LF_index)
 {
-  size_t found_LF_index = find_LF_position(buffer, buffer_size);
+  //size_t found_LF_index = find_LF_position(buffer, buffer_size);
   
-  // if line feed is not found that means data is read properly and there should be null at last index
-  if (found_LF_index > buffer_size) {
-    if (buffer[buffer_size - 1] == '\0')
-      return buffer_size - 1;
+  size_t found_LF_index = strcspn(buffer,"\n");
+ 
+  // if \n is not found that means it is left in stdin buffer
+  if (found_LF_index == (buffer_size - 1)) {
+    flush_input_buffer();
+    
+    if (buffer[expected_LF_index] != '\0')
+      set_null_terminator(buffer, expected_LF_index);
+    
+    return expected_LF_index;
   }
 
   if (found_LF_index > expected_LF_index) {

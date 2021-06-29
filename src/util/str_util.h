@@ -11,6 +11,9 @@
 void 
 print_error(const char *message);
 
+void 
+clear_buffer(char *buffer, size_t buffer_size);
+
 bool 
 has_lowercase(const char *buffer, size_t buffer_length);
 
@@ -32,11 +35,11 @@ is_null_input(const char *buffer);
 void 
 flush_input_buffer();
 
-size_t 
-find_LF_position(const char *buffer, size_t buffer_length);
-
 void 
 set_null_terminator(char *buffer, size_t index);
+
+size_t 
+find_LF_position(const char *buffer, size_t buffer_length);
 
 size_t 
 replace_LF_with_NUL(char *buffer,
