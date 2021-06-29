@@ -113,8 +113,9 @@ replace_LF_with_NUL(char *buffer,
   
   size_t found_LF_index = strcspn(buffer,"\n");
  
-  // if \n is not found that means it is left in stdin buffer
+  // when \n is not found on the buffer
   if (found_LF_index == (buffer_size - 1)) {
+    // remove all remaining data left in the stdin
     flush_input_buffer();
     
     if (buffer[expected_LF_index] != '\0')

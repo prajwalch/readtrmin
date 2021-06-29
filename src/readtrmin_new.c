@@ -100,7 +100,8 @@ readtrmin_string(char *buffer_arg,
     buffer_length = input_length - 1;
   }
   else {
-    // replace_LF_with_NUL will return num of items it found on buffer based on the index where new line is found
+    // it will return num of items it found on buffer if new line is found
+    // else it will return expected index we passed to it
     buffer_length = replace_LF_with_NUL(buffer_arg, input_length, input_length -1);
   }
 
