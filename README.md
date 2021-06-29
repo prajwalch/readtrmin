@@ -1,117 +1,188 @@
-# readtrmin (Read Terminal Input)
+# ReadTrmIn
 **safe and simple terminal input reader**
 
 ## Requirements
 * make
-* clang/gcc (v9.0.0 or above)
+* clang (v9.0.0 or above) or gcc
+
+## Key Features
+* String reading options to allow or disallow certain things like:
+   - whitespace
+   - number
+   - special characters (#, $, _ and so on)
+   - uppercase and lowercase
+* Option to specify numbers of input to read for string and int.
+* Buffer overflow handling for string
+
 
 ## How To Build And Install
 
-The build is Makefile based. After cloning the repository, run the following commands.
+The build is Makefile based. After cloning the repository, follow the below steps:
 
 ```bash
-# go into the cloned directory
-$ cd readtrmin
+make
+```
 
-# now run make, it will make shared library and install it to $LD_LIBRARY_PATH
-$ make
+To build for debugging
+```bash
+make DEBUG=1
 ```
 
 ## How to link on your project
-Before linking it to your program make sure you build and install it first.
-Now first thing you need to do is copy the `readtrmin.h` header file to your project directory because for now while installing the library it doesn't install/copy the header file to include directory itself.  Ok, now let's see by example
+Don't forget to build the library first. Once you done that  make a new project and copy the `readtrmin.h` header file on your src directory (if have) or any other directory like `include`. For now you have to manually copy the header file that's why make sure you copy it to your project directory properly. Now let's see 3 examples for taking a char, string and a integer.
 
 ```c
-//main.c
+// char_example.c
 
 #include <stdio.h>
 #include "input_reader.h"
 
-int main(void)
+int main(int argc, char **argv)
 {
    char single_char = 0;
-   readtrmin(&single_char, DEFAULT_LEN, SINGLE_CHAR);
-   printf("%c\n", single_char);
+   readtrmin_char(&single_char);
+   // print it
+   printf("%c\n", single_char):
 }
 ```
-now let's compile it with linking it to library
+
+```c
+// string_example.c
+
+#include <stdio.h>
+#include "input_reader.h"
+
+// to use default string option
+extern StringOptions default_string_option;
+
+int main(int argc, char **argv)
+{
+   char your_buffer[5] = {0};
+   
+   /* 
+     * readtrmin_string takes 4 arguments
+     * char *buffer
+     * size_t buffer_size
+     * size_t max_input_length
+     * StringOptions *option (it is defined on the header file)
+   */
+   
+   readtrmin_string(your_buffer, 5, 4, &default_string_option);
+   // print it
+   printf("%s\n", your_buffer);
+}
+```
+For more details on StringOptions see API section below.
+
+```c
+// int_example.c
+
+#include <stdio.h>
+#include "input_reader.h"
+
+int main(int argc, char **argv)
+{
+   long your_int = 0;
+   
+   // second argument is max_input_length you want to read.
+   // Note that for now more than 9 are not allowed
+   readtrmin_int(&your_int, 1);
+   // print it
+   printf("%lu\n", your_int):
+}
+```
+Now compile one of the example by linking it with the library as shown below:
 ```bash
-$ clang -lreadtrmin main.c
+$ clang -lreadtrmin program_name.c
+$ ./a.out
+```
+Remember that if you had put the header file on some other directory on your project. you need to tell the compiler where the header file is located by specifying the directory with  `-I` option. See below:
+
+```bash
+$ clang -I/path/of/header/file -lreadtrmin program_name.c
 $ ./a.out
 ```
 
 ## API
-Readtrmin provided one main function
+Readtrmin provided only 3 API function for now as shown on the above example.
+
 ```c
-void readtrmin(void *pointer_arg, int max_input_len, ReadingMode mode);
+bool readtermin_char(char *pointer_arg);
 ```
-ReadingMode tells the reader what type of data and how much data (follows the max input len if user provide it properly. More details are below) to be read. It also handle the buffer overflow problem. There are total 6 modes defined on the header as enums.
+It it straight forward you pass the address of char type variable and it will take the input and stored there. It only allows the alphabet letter (aA to zZ).
 
-* `SINGLE_CHAR`
-    - read only one alphabet character
-* `SINGLE_WORD`
-    - read only alphabet characters upto _max_input_len_
-    - spaces are not allowed
-* `SINGLE_ALPHANUMERIC_WORD`
-    - read both numbers (as a string not actual number), alphabet or mix but not non-alphabet characters upto _max_input_len_
-    - spaces are also allowed
-* `WORD_SENTENCE`
-    - read whole sentence including space upto _max_input_len_
-    - numbers and symbols are not allowed
-* `SINGLE_INT`
-    - read only one numerical value
-* `GROUP_INT`
-    - read multiple numbers (it is same as SINGLE_WORD but as a numbers)
-
-and 3 macro function for different 4 level of logging message for only string type.
+Return true if read  is successful otherwise false.
 
 ```c
-DEBUG_LOG(m);
-DEBUG_INFO(m);
-DEBUG_WARN(m);
-DEBUG_ERROR(m);
+bool readtrmin_string(char *buffer_arg, size_t buffer_size, size_t max_input_len, StringOptions *string_option);
 ```
+This function is bit like above function but with more features which allows you to give maximum length of input/string to read as well as what are the things to allowed like ***space, number, special characters and so on.***  on string while reading it by passing the options to the function. The type `StringOptions` is defined on the header file `readtrmin.h` as below.
 
-## Usage
 ```c
-#include "readtrmin.h"
-// you need to include stdio also because macro functions will need printf function
-#include <stdio.h> 
+typedef struct StringOptions {
+  bool allow_space;
+  bool allow_number;
+  bool allow_symbol;
+  bool allow_uppercase;
+  bool allow_lowercase;
+} StringOptions;
+```
+If you didn't want to make your own custom options you can use default options which is defined on the libraray .c file as below.
 
-int main(void)
-{
-  // SINGLE_CHAR
-  char single_char = 0;
-  readtrmin (&single_char, DEFAULT_LEN, SINGLE_CHAR);
-  printf("%c\n", single_char);
-  
-  // SINGLE_WORD
-  char single_word[5] = {0};
-  readtermin(single_word, 4, SINGLE_WORD);
-  DEBUG_LOG(single_word);
-  
-  // SINGLE_ALPHANUMERIC_WORD
-  char single_alpnum[5] = {0};
-  readtermin(single_alpnum, 4, SINGLE_ALPHANUMERIC_WORD);
-  DEBUG_LOG(single_alpnum);
-  
-  // WORD_SENTENCE
-  char word_sentence[10] = {0};
-  readtermin(word_sentence, 9, WORD_SENTENCE);
-  DEBUG_LOG(word_sentence);
-  
-  // SINGLE_WORD
-  int single_int = 0;
-  readtermin (&single_int, DEFAULT_LEN, SINGLE_INT);
-  printf("%d\n", single_int);
-  
-  // GROUP_INT
-  int group_int = 0;
-  readtermin (&group_int, 5, GROUP_INT);
-  printf("%d\n", group_int);
+```c
+const StringOptions default_string_option = {
+  .allow_space = false,
+  .allow_numer = false,
+  .allow_symbol = false,
+  .allow_uppercase = true,
+  .allow_lowercase = true
+};
+```
+For using it declare this variable on global scope as extern. See above example shown on the section ***How to link on your project***
+
+Now to create your own option declare it with type `StringOptions` and give value (true or false) to members as shown on below:
+```c
+StringOptions your_option;
+your_option.allow_space = true;
+your_option.allow_number = true;
+// And so on
+
+// you can also do like this
+StringOptions your_options = {
+  .allow_space = true,
+  .allow_number = true,
+  // and so on
 }
 ```
 
+Here is the complete example of using  custom option:
+```c
+#include <stdio.h>
+#include "readtrmin.h"
+
+int main(int argc, char **argc)
+{
+  StringOptions my_option = {
+    .allow_space = false,
+    .allow_number = true,
+    .allow_symbol = true,
+    .allow_uppercase = true,
+    .allow_lowercase = true
+  };
+  
+  char username[9] = { 0 };
+  readtrmin_string(username, 9, 8, &my_option);
+  printf("username: %s\n", username);
+}
+```
+
+And last we have int reader
+```c
+bool readtrmin_int(long *pointer_arg, size_t max_input_len);
+```
+It is also same as reading char but it only parse number input. you can provide how many numbers you want take from the input by passing on argument max_input_len. 
+
+***Note that for now it's not allowed to take more than 9 numbers***
 ## License
 
 MIT
