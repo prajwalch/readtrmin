@@ -8,7 +8,7 @@ else
 endif
 
 LIB_FOLDER = ./lib
-LIB_SRCS = ./src/readtrmin_new.c ./src/util/str_util.c
+LIB_SRCS = ./src/readtrmin.c ./src/util/str_util.c
 LIB_OBJS = $(LIB_SRCS:%.c=%.o)
 LIB_DEPS = $(LIB_OBJS:%.o=%.d)
 LIB_NAME = libreadtrmin.so
