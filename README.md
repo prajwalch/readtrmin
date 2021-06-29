@@ -1,8 +1,6 @@
-<<<<<<< HEAD
 # ReadTrmIn
 =======
 # ReadTrmIn (Read Terminal Input)
->>>>>>> 6a7ea83e1ec9e152f635f1988331c15589970c74
 **safe and simple terminal input reader**
 
 ## Requirements
