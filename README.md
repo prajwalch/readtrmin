@@ -1,4 +1,4 @@
-# ReadTrmIn (Read Terminal Input)
+# ReadTrmIn
 **safe and simple terminal input reader**
 
 ## Requirements
