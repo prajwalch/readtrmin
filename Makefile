@@ -14,6 +14,8 @@ LIB_DEPS = $(LIB_OBJS:%.o=%.d)
 LIB_NAME = libreadtrmin.so
 LIB_FILE = $(LIB_FOLDER)/$(LIB_NAME)
 
+FALLBACK_LIBRARY_PATH = ~/../usr/lib
+
 all: readtrmin install
 
 .PHONY: clean_all
@@ -36,7 +38,11 @@ $(LIB_FILE): $(LIB_OBJS)
 
 .PHONY: install
 install:
-	cp $(LIB_FILE) $(LD_LIBRARY_PATH)
+	if [ ! -d $(LD_LIBRARY_PATH) ]; then \
+		mv $(LIB_FILE) $(FALLBACK_LIBRARY_PATH); \
+	else \
+		mv $(LIB_FILE) $(LD_LIBRARY_PATH); \
+	fi
 
 .PHONY: uninstall
 uninstall:
