@@ -38,11 +38,7 @@ $(LIB_FILE): $(LIB_OBJS)
 
 .PHONY: install
 install:
-	if [ ! -d $(LD_LIBRARY_PATH) ]; then \
-		mv $(LIB_FILE) $(FALLBACK_LIBRARY_PATH); \
-	else \
-		mv $(LIB_FILE) $(LD_LIBRARY_PATH); \
-	fi
+	mv $(LIB_FILE) $(FALLBACK_LIBRARY_PATH)
 
 .PHONY: uninstall
 uninstall:
