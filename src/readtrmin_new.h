@@ -22,7 +22,7 @@ readtrmin_string(char *buffer_arg,
                  StringOptions *string_option);
 
 bool 
-readtrmin_int(int *pointer_arg, 
+readtrmin_int(long *pointer_arg, 
               size_t  max_input_len);
 
 /*bool 
