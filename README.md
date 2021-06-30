@@ -28,6 +28,16 @@ To build for debugging
 make DEBUG=1
 ```
 
+Make won't install the header file by default, so you have two options:
+
+### 1. Manually by copying the header file on your project
+See the section ***How to link on your project*** to know how to do that.
+
+### 2. Install it by running
+```bash
+make install_header
+```
+
 ## How to link on your project
  Don't forget to build the library first. Once you are done that make a new project and copy the `readtrmin.h` header file on your src directory (if have) or any other directory like `include`. For now, you have to manually copy the header file that's why to make sure you copy it to your project directory properly. Now let's see 3 examples for taking a char, string, and an integer.
 
