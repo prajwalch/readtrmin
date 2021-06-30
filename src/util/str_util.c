@@ -82,7 +82,7 @@ void
 flush_input_buffer()
 {
   int c = 0;
-  while ((c = getchar()) != '\n' && (c != EOF));
+  while ((c = getchar()) != '\n' && c != EOF);
 }
 
 void
@@ -91,16 +91,15 @@ set_null_terminator(char *buffer, size_t index)
   buffer[index] = '\0';
 }
 
-size_t 
-find_LF_position(const char *buffer, 
-                 size_t buffer_size)
+static size_t 
+find_LF_index(const char *buffer, size_t buffer_size)
 {
   for (size_t index = 0; 
        index < buffer_size; index++) {
     if (buffer[index] == '\n')
       return index;
   }
-  // if line feed is not found on any index it will return length + 1 
+  // \n not found
   return buffer_size + 1;
 }
 
@@ -109,13 +108,11 @@ replace_LF_with_NUL(char *buffer,
                     size_t buffer_size, 
                     size_t expected_LF_index)
 {
-  //size_t found_LF_index = find_LF_position(buffer, buffer_size);
-  
-  size_t found_LF_index = strcspn(buffer,"\n");
+  size_t found_LF_index = find_LF_index(buffer,buffer_size);
  
-  // when \n is not found on the buffer
-  if (found_LF_index == (buffer_size - 1)) {
-    // remove all remaining data left in the stdin
+  // find_LF_index will return buffer_size + 1 if line feed isn't on the buffer 
+  if (found_LF_index > buffer_size) {
+    // remove all buffer left in the stdin
     flush_input_buffer();
     
     if (buffer[expected_LF_index] != '\0')

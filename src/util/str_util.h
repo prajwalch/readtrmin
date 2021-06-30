@@ -39,9 +39,6 @@ void
 set_null_terminator(char *buffer, size_t index);
 
 size_t 
-find_LF_position(const char *buffer, size_t buffer_length);
-
-size_t 
 replace_LF_with_NUL(char *buffer,
                     size_t buffer_length,
                     size_t expected_LF_index);
