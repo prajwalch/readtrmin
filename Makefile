@@ -14,8 +14,10 @@ ifeq ($(PREFIX),)
 endif
 
 BUILD_DIR = ./build
-LIB_SRCS = ./src/readtrmin.c \
-					 ./src/util/str_util.c
+SRC_DIR = ./src
+LIB_SRCS = $(SRC_DIR)/readtrmin.c \
+					 $(SRC_DIR)/util/str_util.c
+LIB_HEADER = $(SRC_DIR)/readtrmin.h
 LIB_OBJS = $(LIB_SRCS:%.c=%.o)
 LIB_DEPS = $(LIB_OBJS:%.o=%.d)
 
@@ -26,7 +28,7 @@ LIB_FILE = $(BUILD_DIR)/$(LIB_NAME)
 all: readtrmin install
 
 .PHONY: clean_all
-clean_all: clean uninstall
+clean_all: clean
 
 .PHONY: readtrmin
 readtrmin: make_build_dir $(LIB_FILE)
@@ -47,9 +49,14 @@ $(LIB_FILE): $(LIB_OBJS)
 install:
 	cp $(LIB_FILE) $(PREFIX)/lib
 
+.PHONY: install_header
+install_header:
+	cp $(LIB_HEADER) $(PREFIX)/include
+
 .PHONY: uninstall
 uninstall:
-	$(RM) $(LD_LIBRARY_PATH)/$(LIB_NAME)
+	$(RM) $(PREFIX)/lib/$(LIB_NAME)
+	$(RM) $(PREFIX)/include/$(LIB_HEADER)
 
 .PHONY: clean
 clean:
