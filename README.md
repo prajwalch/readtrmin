@@ -30,7 +30,7 @@ make DEBUG=1
 
 Make will not install the header file by default, so you have two options:
 
-### 1. Manually by copying the header file on your project
+### 1. Manually copy the header file on your project
 See the section ***How to link on your project*** to know how to do that.
 
 ### 2. Install it by running
