@@ -1,5 +1,5 @@
 # ReadTrmIn
-**aim to be safe and simple terminal input reader**
+**aim of safe and simple terminal input reader**
 
 ## Requirements
 * make
