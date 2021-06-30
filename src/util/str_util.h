@@ -1,9 +1,9 @@
 #ifndef TRMIN_STR_UTIl_H
 #define TRMIN_STR_UTIl_H
 
-#include <stdio.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdio.h>
 
 #define TRM_ERROR(m) \
   fprintf(stderr, "error: %s\n", m);

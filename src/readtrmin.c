@@ -1,9 +1,9 @@
 #include "readtrmin.h"
 
-#include <ctype.h>
 #include <assert.h>
-#include <string.h>
+#include <ctype.h>
 #include <errno.h>
+#include <string.h>
 #include <stdlib.h>
 
 #include "util/str_util.h"
