@@ -17,7 +17,7 @@
 
 ## How To Build And Install
 
-The build is Makefile based. After cloning the repository, follow the below steps:
+The build is Makefile-based. After cloning the repository, follow the below steps:
 
 ```bash
 make
@@ -28,8 +28,18 @@ To build for debugging
 make DEBUG=1
 ```
 
+Make won't install the header file by default, so you have two options:
+
+### 1. Manually by copying the header file on your project
+See the section ***How to link on your project*** to know how to do that.
+
+### 2. Install it by running
+```bash
+make install_header
+```
+
 ## How to link on your project
-Don't forget to build the library first. Once you done that  make a new project and copy the `readtrmin.h` header file on your src directory (if have) or any other directory like `include`. For now you have to manually copy the header file that's why make sure you copy it to your project directory properly. Now let's see 3 examples for taking a char, string and a integer.
+ Don't forget to build the library first. Once you are done that make a new project and copy the `readtrmin.h` header file on your src directory (if have) or any other directory like `include`. For now, you have to manually copy the header file that's why to make sure you copy it to your project directory properly. Now let's see 3 examples for taking a char, string, and an integer.
 
 ```c
 // char_example.c
@@ -72,7 +82,7 @@ int main(int argc, char **argv)
    printf("%s\n", your_buffer);
 }
 ```
-For more details on StringOptions see API section below.
+For more details on StringOptions see the API section below.
 
 ```c
 // int_example.c
@@ -91,7 +101,7 @@ int main(int argc, char **argv)
    printf("%lu\n", your_int):
 }
 ```
-Now compile one of the example by linking it with the library as shown below:
+Now compile one of the examples by linking it with the library as shown below:
 ```bash
 $ clang -lreadtrmin program_name.c
 $ ./a.out
@@ -104,19 +114,19 @@ $ ./a.out
 ```
 
 ## API
-Readtrmin provided only 3 API function for now as shown on the above example.
+Readtrmin provided only 3 API functions for now as shown in the above example.
 
 ```c
 bool readtermin_char(char *pointer_arg);
 ```
-It it straight forward you pass the address of char type variable and it will take the input and stored there. It only allows the alphabet letter (aA to zZ).
+It is straight forward you pass the address of the char type variable and it will take the input and stored it there. It only allows the alphabet letter (aA to zZ).
 
-Return true if read  is successful otherwise false.
+Return true if the read is successful otherwise false.
 
 ```c
 bool readtrmin_string(char *buffer_arg, size_t buffer_size, size_t max_input_len, StringOptions *string_option);
 ```
-This function is bit like above function but with more features which allows you to give maximum length of input/string to read as well as what are the things to allowed like ***space, number, special characters and so on.***  on string while reading it by passing the options to the function. The type `StringOptions` is defined on the header file `readtrmin.h` as below.
+This function is a bit like the above function but with more features that allow you to give the maximum length of input/string to read as well as what are the things to allowed like ***space, number, special characters, and so on.***  on the string while reading it by passing the options to the function. The type `StringOptions` is defined on the header file `readtrmin.h` as below.
 
 ```c
 typedef struct StringOptions {
@@ -127,7 +137,7 @@ typedef struct StringOptions {
   bool allow_lowercase;
 } StringOptions;
 ```
-If you didn't want to make your own custom options you can use default options which is defined on the libraray .c file as below.
+If you didn't want to make your custom options you can use default options which are defined on the library .c file as below.
 
 ```c
 const StringOptions default_string_option = {
@@ -138,7 +148,7 @@ const StringOptions default_string_option = {
   .allow_lowercase = true
 };
 ```
-For using it declare this variable on global scope as extern. See above example shown on the section ***How to link on your project***
+For using it declare this variable on a global scope as an extern. See the above example shown on the section ***How to link on your project***
 
 Now to create your own option declare it with type `StringOptions` and give value (true or false) to members as shown on below:
 ```c
@@ -180,7 +190,7 @@ And last we have int reader
 ```c
 bool readtrmin_int(long *pointer_arg, size_t max_input_len);
 ```
-It is also same as reading char but it only parse number input. you can provide how many numbers you want take from the input by passing on argument max_input_len. 
+It is also the same as reading char but it only parses number input. you can provide how many numbers you want to take from the input by passing on argument max_input_len. 
 
 ***Note that for now it's not allowed to take more than 9 numbers***
 ## License
