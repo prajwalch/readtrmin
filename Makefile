@@ -35,7 +35,7 @@ readtrmin: make_build_dir $(LIB_FILE)
 
 .PHONY: make_build_dir
 make_build_dir:
-	if [ ! -d $(BUILD_DIR) ]; then mkdir $(BUILD_DIR); fi
+	@if [ ! -d $(BUILD_DIR) ]; then mkdir $(BUILD_DIR); fi
 
 $(LIB_FILE): $(LIB_OBJS)
 	$(CC) $(LDFLAGS) -fPIC -o $@ $^
@@ -47,7 +47,14 @@ $(LIB_FILE): $(LIB_OBJS)
 
 .PHONY: install
 install:
-	cp $(LIB_FILE) $(PREFIX)/lib
+	@if [ ! -f $(LIB_FILE) ]; then \
+		echo "installation failed"; \
+		echo "$(LIB_NAME) not found"; \
+		echo "run 'make readtrmin' to build it"; \
+	else \
+		cp $(LIB_FILE) $(PREFIX)/lib; \
+		echo "installation successful"; \
+	fi
 
 .PHONY: install_header
 install_header:
