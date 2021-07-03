@@ -1,6 +1,5 @@
-*.[oad]
+build/*
+temp.*
+
 test/*.[od]
 test/testreader
-*.txt
-lib
-build
