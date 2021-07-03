@@ -6,7 +6,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "util/str_util.h"
+#include "str_util.h"
 
 #define NULL_BYTE 1
 #define MIN_BUFFER_SIZE 2
