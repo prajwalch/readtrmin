@@ -13,16 +13,18 @@ ifeq ($(PREFIX),)
 	PREFIX := /usr/local
 endif
 
-BUILD_DIR = ./build
-SRC_DIR = ./src
-LIB_SRCS = $(SRC_DIR)/readtrmin.c \
-					 $(SRC_DIR)/util/str_util.c
-LIB_HEADER = $(SRC_DIR)/readtrmin.h
-LIB_OBJS = $(LIB_SRCS:%.c=%.o)
-LIB_DEPS = $(LIB_OBJS:%.o=%.d)
+BUILD_DIR = build
+SRC_DIR = src
 
-NAME = readtrmin
-LIB_NAME = lib$(NAME).so
+LIB_SRCS = $(SRC_DIR)/readtrmin.c \
+					 $(SRC_DIR)/str_util.c
+LIB_HEADER = readtrmin.h
+
+LIB_OBJS = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(LIB_SRCS))
+LIB_DEPS = $(patsubst %.o, %.d, $(LIB_OBJS))
+
+TARGET = readtrmin
+LIB_NAME = lib$(TARGET).so
 LIB_FILE = $(BUILD_DIR)/$(LIB_NAME)
 
 all: readtrmin install
@@ -40,7 +42,7 @@ make_build_dir:
 $(LIB_FILE): $(LIB_OBJS)
 	$(CC) $(LDFLAGS) -fPIC -o $@ $^
 
-%.o: %.c
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $^ -o $@
 
 -include ($(LIB_DEPS))
