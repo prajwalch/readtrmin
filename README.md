@@ -148,7 +148,7 @@ const StringOptions default_string_option = {
   .allow_lowercase = true
 };
 ```
-For using it declare this variable on a global scope as an extern. See the above example shown on the section [How to link on your project](#how-link-on-your-project)
+For using it declare this variable on a global scope as an extern. See the above example shown on the section [How to link on your project](#how-to-link-on-your-project)
 
 Now to create your own option declare it with type `StringOptions` and give value (true or false) to members as shown on below:
 ```c
