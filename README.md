@@ -31,7 +31,7 @@ make DEBUG=1
 Make will not install the header file by default, so you have two options:
 
 ### 1. Manually copy the header file on your project
-See the section ***How to link on your project*** to know how to do that.
+See the section [How to link on your project](#how-to-link-on-your-project) to know how to do that.
 
 ### 2. Install it by running
 ```bash
@@ -82,7 +82,7 @@ int main(int argc, char **argv)
    printf("%s\n", your_buffer);
 }
 ```
-For more details on StringOptions see the API section below.
+For more details on StringOptions see the [API](#api) section below.
 
 ```c
 // int_example.c
@@ -148,7 +148,7 @@ const StringOptions default_string_option = {
   .allow_lowercase = true
 };
 ```
-For using it declare this variable on a global scope as an extern. See the above example shown on the section ***How to link on your project***
+For using it declare this variable on a global scope as an extern. See the above example shown on the section [How to link on your project](#how-link-on-your-project)
 
 Now to create your own option declare it with type `StringOptions` and give value (true or false) to members as shown on below:
 ```c
