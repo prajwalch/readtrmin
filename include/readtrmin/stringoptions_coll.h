@@ -3,7 +3,7 @@
 
 #include "stringoptions_type.h"
 
-const StringOptions default_stringoption = {
+StringOptions default_stringoption = {
   .allow_space = false,
   .allow_number = false,
   .allow_symbol = false,
