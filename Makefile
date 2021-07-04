@@ -27,7 +27,7 @@ TARGET = readtrmin
 LIB_NAME = lib$(TARGET).so
 LIB_FILE = $(BUILD_DIR)/$(LIB_NAME)
 
-LIB_INSTALL_PATH = $(PREFIX)/lib/readtrmin
+LIB_INSTALL_PATH = $(PREFIX)/lib
 LIB_HEADER_PATH = $(PREFIX)/include/readtrmin
 
 all: readtrmin install
@@ -57,9 +57,6 @@ install:
 		echo "$(LIB_NAME) not found"; \
 		echo "run 'make readtrmin' to build it"; \
 	else \
-		if [ ! -d $(LIB_INSTALL_PATH) ]; then \
-			mkdir $(LIB_INSTALL_PATH); \
-		fi; \
 		cp $(LIB_FILE) $(LIB_INSTALL_PATH); \
 	fi
 	
@@ -72,7 +69,7 @@ install:
 
 .PHONY: uninstall
 uninstall:
-	$(RM) -r $(LIB_INSTALL_PATH)
+	$(RM) $(LIB_INSTALL_PATH)/$(LIB_NAME)
 	$(RM) -r $(LIB_HEADER_PATH)
 
 .PHONY: clean
