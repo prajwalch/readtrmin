@@ -4,13 +4,11 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-typedef struct StringOptions {
-  bool allow_space;
-  bool allow_number;
-  bool allow_symbol;
-  bool allow_uppercase;
-  bool allow_lowercase;
-} StringOptions;
+#include "stringoptions_type.h"
+
+#ifndef READTRMIN_NSTRINGOPTIONS_COLL
+#include "stringoptions_coll.h"
+#endif // READTRMIN_NSTRINGOPTIONS_COLL
 
 bool 
 readtrmin_char(char *pointer_arg);

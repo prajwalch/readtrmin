@@ -1,3 +1,4 @@
+#define READTRMIN_NOSTRINGOPTIONS_COLL
 #include "readtrmin.h"
 
 #include <assert.h>

@@ -1,5 +1,5 @@
 DEBUG = 0
-CFLAGS = -MMD -std=c11
+CFLAGS = -MMD -std=c11 -I./include/readtrmin/
 
 ifeq ($(DEBUG), 1)
 	CFLAGS += -g -Wall -Werror -Wextra -DDEBUG
@@ -27,6 +27,9 @@ TARGET = readtrmin
 LIB_NAME = lib$(TARGET).so
 LIB_FILE = $(BUILD_DIR)/$(LIB_NAME)
 
+LIB_INSTALL_PATH = $(PREFIX)/lib/readtrmin
+LIB_HEADER_PATH = $(PREFIX)/include/readtrmin
+
 all: readtrmin install
 
 .PHONY: clean_all
@@ -43,7 +46,7 @@ $(LIB_FILE): $(LIB_OBJS)
 	$(CC) $(LDFLAGS) -fPIC -o $@ $^
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) -c $^ -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 -include ($(LIB_DEPS))
 
@@ -54,7 +57,10 @@ install:
 		echo "$(LIB_NAME) not found"; \
 		echo "run 'make readtrmin' to build it"; \
 	else \
-		cp $(LIB_FILE) $(PREFIX)/lib; \
+		if [ ! -d $(LIB_INSTALL_PATH) ]; then \
+			mkdir $(LIB_INSTALL_PATH); \
+		fi; \
+		cp $(LIB_FILE) $(LIB_INSTALL_PATH); \
 		echo "installation successful"; \
 	fi
 
@@ -64,8 +70,8 @@ install_header:
 
 .PHONY: uninstall
 uninstall:
-	$(RM) $(PREFIX)/lib/$(LIB_NAME)
-	$(RM) $(PREFIX)/include/$(LIB_HEADER)
+	$(RM) -r $(LIB_INSTALL_PATH)
+	$(RM) -r $(LIB_HEADER_PATH)
 
 .PHONY: clean
 clean:
