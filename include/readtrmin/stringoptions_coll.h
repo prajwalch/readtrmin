@@ -1,4 +1,5 @@
 #ifndef READTRMIN_STRINGOPTIONS_COLL_H
+#define READTRMIN_STRINGOPTIONS_COLL_H
 
 #include "stringoptions_type.h"
 
