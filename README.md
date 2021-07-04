@@ -17,35 +17,25 @@
 
 ## How To Build And Install
 
-The build is Makefile-based. After cloning the repository, follow the below steps:
+After cloned the repository, run the below command to build:
 
 ```bash
 make
 ```
 
-To build for debugging
+To build for debugging run:
 ```bash
 make DEBUG=1
 ```
 
-Make will not install the header file by default, so you have two options:
-
-### 1. Manually copy the header file on your project
-See the section [How to link on your project](#how-to-link-on-your-project) to know how to do that.
-
-### 2. Install it by running
-```bash
-make install_header
-```
-
 ## How to link on your project
- Don't forget to build the library first. Once you are done that make a new project and copy the `readtrmin.h` header file on your src directory (if have) or any other directory like `include`. For now, you have to manually copy the header file that's why to make sure you copy it to your project directory properly. Now let's see 3 examples for taking a char, string, and an integer.
+ Don't forget to build and install the library first. Once you are done that make a new project and create new 3 source file by the name of `char_example.c`, `string_example.c` and `int_example.c`. Now you can copy and paste the code into each file respectively or manually type.
 
 ```c
 // char_example.c
 
 #include <stdio.h>
-#include "input_reader.h"
+#include <readtrmin/readtrmin.h>
 
 int main(int argc, char **argv)
 {
@@ -60,10 +50,7 @@ int main(int argc, char **argv)
 // string_example.c
 
 #include <stdio.h>
-#include "input_reader.h"
-
-// to use default string option
-extern StringOptions default_string_option;
+#include <readtrmin/readtrmin.h>
 
 int main(int argc, char **argv)
 {
@@ -88,8 +75,8 @@ For more details on StringOptions see the [API](#api) section below.
 // int_example.c
 
 #include <stdio.h>
-#include "input_reader.h"
-
+#include <readtrmin/readtrmin.h>
+>
 int main(int argc, char **argv)
 {
    long your_int = 0;
@@ -106,13 +93,6 @@ Now compile one of the examples by linking it with the library as shown below:
 $ clang -lreadtrmin program_name.c
 $ ./a.out
 ```
-Remember that if you had put the header file on some other directory on your project. you need to tell the compiler where the header file is located by specifying the directory with  `-I` option. See below:
-
-```bash
-$ clang -I/path/of/header/file -lreadtrmin program_name.c
-$ ./a.out
-```
-
 ## API
 Readtrmin provided only 3 API functions for now as shown in the above example.
 
@@ -137,7 +117,7 @@ typedef struct StringOptions {
   bool allow_lowercase;
 } StringOptions;
 ```
-If you didn't want to make your custom options you can use default options which are defined on the library .c file as below.
+If you didn't want to make your custom options you can use default options which are defined on the header file `stringoptions_coll.h` file as below. This header file can also be include separately by yourself, but by default it is included on the `readtrmin.h` header file. So no need to worry about it.
 
 ```c
 const StringOptions default_string_option = {
@@ -148,7 +128,7 @@ const StringOptions default_string_option = {
   .allow_lowercase = true
 };
 ```
-For using it declare this variable on a global scope as an extern. See the above string example (string_example.c) shown on the section [How to link on your project](#how-to-link-on-your-project)
+For using it you can directly pass the address. See the above string example (string_example.c) shown on the section [How to link on your project](#how-to-link-on-your-project)
 
 Now to create your own option declare it with type `StringOptions` and give value (true or false) to members as shown on below:
 ```c
@@ -168,7 +148,7 @@ StringOptions your_options = {
 Here is the complete example of using  custom option:
 ```c
 #include <stdio.h>
-#include "readtrmin.h"
+#include <readtrmin/readtrmin.h>
 
 int main(int argc, char **argc)
 {
