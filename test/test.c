@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "readtrmin.h"
+#include <readtrmin/readtrmin.h>
 
 extern StringOptions default_string_option;
 
