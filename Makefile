@@ -18,7 +18,7 @@ SRC_DIR = src
 
 LIB_SRCS = $(SRC_DIR)/readtrmin.c \
 					 $(SRC_DIR)/str_util.c
-LIB_HEADER = readtrmin.h
+LIB_HEADER = include
 
 LIB_OBJS = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(LIB_SRCS))
 LIB_DEPS = $(patsubst %.o, %.d, $(LIB_OBJS))
@@ -61,12 +61,14 @@ install:
 			mkdir $(LIB_INSTALL_PATH); \
 		fi; \
 		cp $(LIB_FILE) $(LIB_INSTALL_PATH); \
-		echo "installation successful"; \
 	fi
-
-.PHONY: install_header
-install_header:
-	cp $(LIB_HEADER) $(PREFIX)/include
+	
+	@if [ ! -d $(LIB_HEADERL_PATH) ]; then \
+			mkdir $(LIB_HEADER_PATH); \
+	fi
+	
+	@cp -r $(LIB_HEADER)/readtrmin $(LIB_HEADER_PATH)
+	@echo "installation successful"; \
 
 .PHONY: uninstall
 uninstall:
