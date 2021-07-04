@@ -13,14 +13,6 @@
 #define MIN_BUFFER_SIZE 2
 #define INT_MAX_BUFFER_SIZE 10
 
-const StringOptions default_string_option = { 
-  .allow_space = false,
-  .allow_number = false,
-  .allow_symbol = false,
-  .allow_uppercase = true,
-  .allow_lowercase = true
-};
-
 bool 
 readtrmin_int(long *pointer_arg, size_t max_input_len)
 {
