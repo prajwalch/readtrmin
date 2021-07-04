@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <readtrmin/readtrmin.h>
 
-extern StringOptions default_string_option;
-
 int main(void)
 {
   printf("____char\n");
