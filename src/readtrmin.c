@@ -21,10 +21,10 @@ readtrmin_int(long *pointer_arg, size_t max_input_len)
 
   char buffer[INT_MAX_BUFFER_SIZE];
   clear_buffer(buffer, INT_MAX_BUFFER_SIZE);
-  
+
   size_t buffer_length = 0;
   size_t input_length = max_input_len + NULL_BYTE;
-  
+
   if (input_length > INT_MAX_BUFFER_SIZE)
     input_length = INT_MAX_BUFFER_SIZE - 1; 
 
@@ -43,11 +43,6 @@ readtrmin_int(long *pointer_arg, size_t max_input_len)
     print_error("expected some input but found nothing");
     return false;
   }
-
-  /*if (has_alphabet(buffer, buffer_length)) {
-    print_error("other then integers are not allowed");
-    return false;
-  }*/
 
   errno = 0;
   char *endPtr = NULL;
