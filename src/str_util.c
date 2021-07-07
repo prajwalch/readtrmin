@@ -16,34 +16,6 @@ clear_buffer(char *buffer, size_t buffer_size)
   memset(buffer, 0, buffer_size);
 }
 
-typedef int (*CallBackFunc_t)(int);
-
-static bool 
-search_char(const char *buffer, 
-            size_t buffer_length, 
-            CallBackFunc_t callback)
-{
-  for (size_t index = 0; 
-       index < buffer_length; index += 1) {
-    if (callback(buffer[index]))
-      return true;
-  }
-
-  return false;
-}
-
-bool 
-has_lowercase(const char *buffer, size_t buffer_length)
-{
-  return search_char(buffer, buffer_length, &islower);
-}
-
-bool 
-has_uppercase(const char *buffer, size_t buffer_length)
-{
-  return search_char(buffer, buffer_length, &isupper);
-}
-
 static int 
 is_symbol(int ch)
 {
@@ -52,22 +24,56 @@ is_symbol(int ch)
   return 0;
 }
 
-bool 
-has_symbol(const char *buffer, size_t buffer_length)
+void
+parse_string(const char *buffer, 
+             size_t buffer_length, 
+             struct TakenString *taken_string)
 {
-  return search_char(buffer, buffer_length, &is_symbol);
+  int ch = 0;
+  for (size_t index = 0; index < buffer_length; 
+       index += 1) {
+    ch = buffer[index];
+    
+    if (isspace(ch)) {
+      // don't re-assign the found indicator i.e true
+      // when indicator was already set when sub-string was found on previous iteration
+      if (!taken_string->has_whitespace)
+        taken_string->has_whitespace = true;
+    }
+    
+    if (isdigit(ch)) {
+      if (!taken_string->has_number)
+        taken_string->has_number = true;
+    }
+    
+    if (is_symbol(ch)) {
+      if (!taken_string->has_symbol)
+        taken_string->has_symbol = true;
+    }
+    
+    if (isupper(ch)) {
+      if (!taken_string->has_uppercase)
+        taken_string->has_uppercase = true;
+    }
+    
+    if (islower(ch)) {
+      if (!taken_string->has_lowercase)
+        taken_string->has_lowercase = true;
+    }
+  }
 }
 
-bool 
-has_number(const char *buffer, size_t buffer_length)
+struct TakenString
+init_TakenString_struct()
 {
-  return search_char(buffer, buffer_length, &isdigit);
-}
-
-bool 
-has_whitespace(const char *buffer, size_t buffer_length)
-{ 
-  return search_char(buffer, buffer_length, &isspace);
+  struct TakenString default_value = {
+    .has_whitespace = false,
+    .has_number = false,
+    .has_symbol = false,
+    .has_uppercase = false,
+    .has_lowercase = false
+  };
+  return default_value;
 }
 
 bool 

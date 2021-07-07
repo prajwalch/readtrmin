@@ -72,12 +72,12 @@ readtrmin_string(char *buffer_arg,
   assert(max_input_len < buffer_size);
   assert(string_option != NULL);
 
+  if (max_input_len >= buffer_size)
+    max_input_len = buffer_size - 1;
+
   clear_buffer(buffer_arg, buffer_size);
   size_t buffer_length = 0;
   size_t input_length = max_input_len + NULL_BYTE;
-
-  if (input_length > buffer_size)
-    input_length = buffer_size - 1;
 
   if (!get_input(buffer_arg, input_length))
     return false;
@@ -90,7 +90,7 @@ readtrmin_string(char *buffer_arg,
   else {
     // it will return num of items it found on buffer if new line is found
     // else it will return expected index we passed to it
-    buffer_length = replace_LF_with_NUL(buffer_arg, input_length, input_length -1);
+    buffer_length = replace_LF_with_NUL(buffer_arg, input_length, input_length - 1);
   }
 
   if (is_null_input(buffer_arg)) {
@@ -99,8 +99,11 @@ readtrmin_string(char *buffer_arg,
     return false;
   }
 
+  struct TakenString taken_string = init_TakenString_struct();
+  parse_string(buffer_arg, buffer_length, &taken_string);
+  
   if (!string_option->allow_space) {
-    if (has_whitespace(buffer_arg, buffer_length)) {
+    if (taken_string.has_whitespace) {
       print_error("spaces are not allowed");
       clear_buffer(buffer_arg, buffer_size);
       return false;
@@ -108,7 +111,7 @@ readtrmin_string(char *buffer_arg,
   }
 
   if (!string_option->allow_number) {
-    if (has_number(buffer_arg, buffer_length)) {
+    if (taken_string.has_number) {
       print_error("numbers are not allowed");
       clear_buffer(buffer_arg, buffer_size);
       return false;
@@ -116,7 +119,7 @@ readtrmin_string(char *buffer_arg,
   }
 
   if (!string_option->allow_symbol) {
-    if (has_symbol(buffer_arg, buffer_length)) {
+    if (taken_string.has_symbol) {
       print_error("special characters are not allowed");
       clear_buffer(buffer_arg, buffer_size);
       return false;
@@ -124,7 +127,7 @@ readtrmin_string(char *buffer_arg,
   }
 
   if (!string_option->allow_uppercase) {
-    if (has_uppercase(buffer_arg, buffer_length)) {
+    if (taken_string.has_uppercase) {
       print_error("uppercase are not allowed, as it is disabled on option");
       clear_buffer(buffer_arg, buffer_size);
       return false;
@@ -132,7 +135,7 @@ readtrmin_string(char *buffer_arg,
   }
 
   if (!string_option->allow_lowercase) {
-    if (has_lowercase(buffer_arg, buffer_length)) {
+    if (taken_string.has_lowercase) {
       print_error("lowecase are not allowed, as it is disabled on option");
       clear_buffer(buffer_arg, buffer_size);
       return false;

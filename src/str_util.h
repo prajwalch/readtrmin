@@ -8,6 +8,14 @@
 #define TRM_ERROR(m) \
   fprintf(stderr, "error: %s\n", m);
 
+struct TakenString {
+  bool has_whitespace;
+  bool has_number;
+  bool has_symbol;
+  bool has_uppercase;
+  bool has_lowercase;
+};
+
 void 
 print_error(const char *message);
 
@@ -28,6 +36,14 @@ has_number(const char *buffer, size_t buffer_length);
 
 bool 
 has_whitespace(const char *buffer, size_t buffer_length);
+
+void
+parse_string(const char *buffer, 
+             size_t buffer_length, 
+             struct TakenString *taken_string);
+
+struct TakenString
+init_TakenString_struct();
 
 bool 
 is_null_input(const char *buffer);
