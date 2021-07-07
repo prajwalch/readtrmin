@@ -75,3 +75,8 @@ uninstall:
 .PHONY: clean
 clean:
 	$(RM) $(LIB_OBJS) $(LIB_DEPS) $(LIB_FILE)
+
+#test
+.PHONY: test
+test:
+	$(MAKE) -C test
