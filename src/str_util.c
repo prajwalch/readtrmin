@@ -36,7 +36,7 @@ parse_string(const char *buffer,
     
     if (isspace(ch)) {
       // don't re-assign the found indicator i.e true
-      // when indicator was already set when sub-string was found on previous iteration
+      // if indicator was already set when sub-string was found on previous iteration
       if (!taken_string->has_whitespace)
         taken_string->has_whitespace = true;
     }

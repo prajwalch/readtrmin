@@ -22,21 +22,6 @@ print_error(const char *message);
 void 
 clear_buffer(char *buffer, size_t buffer_size);
 
-bool 
-has_lowercase(const char *buffer, size_t buffer_length);
-
-bool 
-has_uppercase(const char *buffer, size_t buffer_length);
-
-bool 
-has_symbol(const char *buffer, size_t buffer_length);
-
-bool 
-has_number(const char *buffer, size_t buffer_length);
-
-bool 
-has_whitespace(const char *buffer, size_t buffer_length);
-
 void
 parse_string(const char *buffer, 
              size_t buffer_length, 
