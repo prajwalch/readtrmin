@@ -1,5 +1,5 @@
-#ifndef TRMIN_STR_UTIl_H
-#define TRMIN_STR_UTIl_H
+#ifndef READTRMIN_STR_UTIl_H
+#define READTRMIN_STR_UTIl_H
 
 #include <stdbool.h>
 #include <stddef.h>
