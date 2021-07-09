@@ -17,7 +17,7 @@ BUILD_DIR = build
 SRC_DIR = src
 
 LIB_SRCS = $(SRC_DIR)/readtrmin.c \
-					 $(SRC_DIR)/str_util.c
+		   $(SRC_DIR)/str_util.c
 LIB_HEADER = include
 
 LIB_OBJS = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(LIB_SRCS))
@@ -56,16 +56,16 @@ install:
 		echo "installation failed"; \
 		echo "$(LIB_NAME) not found"; \
 		echo "run 'make readtrmin' to build it"; \
-	else \
+		else \
 		cp $(LIB_FILE) $(LIB_INSTALL_PATH); \
+		fi
+
+@if [ ! -d $(LIB_HEADERL_PATH) ]; then \
+	mkdir $(LIB_HEADER_PATH); \
 	fi
-	
-	@if [ ! -d $(LIB_HEADERL_PATH) ]; then \
-			mkdir $(LIB_HEADER_PATH); \
-	fi
-	
-	@cp -r $(LIB_HEADER)/readtrmin $(LIB_HEADER_PATH)
-	@echo "installation successful"; \
+
+@cp -r $(LIB_HEADER)/readtrmin $(LIB_HEADER_PATH)
+@echo "installation successful"; \
 
 .PHONY: uninstall
 uninstall:
