@@ -10,21 +10,21 @@
 #include "stringoptions_coll.h"
 #endif // READTRMIN_NSTRINGOPTIONS_COLL
 
-bool 
+bool
 readtrmin_char(char *pointer_arg);
 
 bool
-readtrmin_string(char *buffer_arg, 
-                 size_t buffer_size, 
-                 size_t max_input_len, 
+readtrmin_string(char *buffer_arg,
+                 size_t buffer_size,
+                 size_t max_input_len,
                  StringOptions *string_option);
 
-bool 
-readtrmin_int(long *pointer_arg, 
+bool
+readtrmin_int(long *pointer_arg,
               size_t  max_input_len);
 
-/*bool 
-  readtrmin_float(double *pointer_arg, 
+/*bool
+  readtrmin_float(double *pointer_arg,
   size_t const  max_input_len);
   */
 #endif
