@@ -99,11 +99,11 @@ readtrmin_string(char *buffer_arg,
     return false;
   }
 
-  struct TakenString taken_string = init_TakenString_struct();
-  parse_string(buffer_arg, buffer_length, &taken_string);
+  struct CharacterSets found_char_set = init_CharacterSets_struct();
+  search_character_sets(buffer_arg, buffer_length, &found_char_set);
   
   if (!string_option->allow_space) {
-    if (taken_string.has_whitespace) {
+    if (found_char_set.space) {
       print_error("spaces are not allowed");
       clear_buffer(buffer_arg, buffer_size);
       return false;
@@ -111,7 +111,7 @@ readtrmin_string(char *buffer_arg,
   }
 
   if (!string_option->allow_number) {
-    if (taken_string.has_number) {
+    if (found_char_set.number) {
       print_error("numbers are not allowed");
       clear_buffer(buffer_arg, buffer_size);
       return false;
@@ -119,7 +119,7 @@ readtrmin_string(char *buffer_arg,
   }
 
   if (!string_option->allow_symbol) {
-    if (taken_string.has_symbol) {
+    if (found_char_set.symbol) {
       print_error("special characters are not allowed");
       clear_buffer(buffer_arg, buffer_size);
       return false;
@@ -127,7 +127,7 @@ readtrmin_string(char *buffer_arg,
   }
 
   if (!string_option->allow_uppercase) {
-    if (taken_string.has_uppercase) {
+    if (found_char_set.uppercase) {
       print_error("uppercase are not allowed, as it is disabled on option");
       clear_buffer(buffer_arg, buffer_size);
       return false;
@@ -135,7 +135,7 @@ readtrmin_string(char *buffer_arg,
   }
 
   if (!string_option->allow_lowercase) {
-    if (taken_string.has_lowercase) {
+    if (found_char_set.lowercase) {
       print_error("lowecase are not allowed, as it is disabled on option");
       clear_buffer(buffer_arg, buffer_size);
       return false;

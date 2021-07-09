@@ -8,12 +8,12 @@
 #define TRM_ERROR(m) \
   fprintf(stderr, "error: %s\n", m);
 
-struct TakenString {
-  bool has_whitespace;
-  bool has_number;
-  bool has_symbol;
-  bool has_uppercase;
-  bool has_lowercase;
+struct CharacterSets {
+  bool space;
+  bool number;
+  bool symbol;
+  bool uppercase;
+  bool lowercase;
 };
 
 void 
@@ -23,12 +23,12 @@ void
 clear_buffer(char *buffer, size_t buffer_size);
 
 void
-parse_string(const char *buffer, 
+search_character_sets(const char *buffer, 
              size_t buffer_length, 
-             struct TakenString *taken_string);
+             struct CharacterSets *character_set);
 
-struct TakenString
-init_TakenString_struct();
+struct CharacterSets
+init_CharacterSets_struct();
 
 bool 
 is_null_input(const char *buffer);

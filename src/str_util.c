@@ -25,9 +25,9 @@ is_symbol(int ch)
 }
 
 void
-parse_string(const char *buffer, 
+search_character_sets(const char *buffer, 
              size_t buffer_length, 
-             struct TakenString *taken_string)
+             struct CharacterSets *character_set)
 {
   int ch = 0;
   for (size_t index = 0; index < buffer_length; 
@@ -37,41 +37,41 @@ parse_string(const char *buffer,
     if (isspace(ch)) {
       // don't re-assign the found indicator i.e true
       // if indicator was already set when sub-string was found on previous iteration
-      if (!taken_string->has_whitespace)
-        taken_string->has_whitespace = true;
+      if (character_set->space == false)
+        character_set->space = true;
     }
     
     if (isdigit(ch)) {
-      if (!taken_string->has_number)
-        taken_string->has_number = true;
+      if (character_set->number == false)
+        character_set->number = true;
     }
     
     if (is_symbol(ch)) {
-      if (!taken_string->has_symbol)
-        taken_string->has_symbol = true;
+      if (character_set->symbol == false)
+        character_set->symbol = true;
     }
     
     if (isupper(ch)) {
-      if (!taken_string->has_uppercase)
-        taken_string->has_uppercase = true;
+      if (character_set->uppercase == false)
+        character_set->uppercase = true;
     }
     
     if (islower(ch)) {
-      if (!taken_string->has_lowercase)
-        taken_string->has_lowercase = true;
+      if (character_set->lowercase == false)
+        character_set->lowercase = true;
     }
   }
 }
 
-struct TakenString
-init_TakenString_struct()
+struct CharacterSets
+init_CharacterSets_struct()
 {
-  struct TakenString default_value = {
-    .has_whitespace = false,
-    .has_number = false,
-    .has_symbol = false,
-    .has_uppercase = false,
-    .has_lowercase = false
+  struct CharacterSets default_value = {
+    .space = false,
+    .number = false,
+    .symbol = false,
+    .uppercase = false,
+    .lowercase = false
   };
   return default_value;
 }
