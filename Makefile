@@ -56,16 +56,16 @@ install:
 		echo "installation failed"; \
 		echo "$(LIB_NAME) not found"; \
 		echo "run 'make readtrmin' to build it"; \
-		else \
+	else \
 		cp $(LIB_FILE) $(LIB_INSTALL_PATH); \
-		fi
-
-@if [ ! -d $(LIB_HEADERL_PATH) ]; then \
-	mkdir $(LIB_HEADER_PATH); \
 	fi
 
-@cp -r $(LIB_HEADER)/readtrmin $(LIB_HEADER_PATH)
-@echo "installation successful"; \
+	@if [ ! -d $(LIB_HEADERL_PATH) ]; then \
+		mkdir $(LIB_HEADER_PATH); \
+	fi
+
+	@cp -r $(LIB_HEADER)/readtrmin $(LIB_HEADER_PATH)
+	@echo "installation successful"; \
 
 .PHONY: uninstall
 uninstall:
