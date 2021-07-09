@@ -80,3 +80,7 @@ clean:
 .PHONY: test
 test:
 	$(MAKE) -C test
+
+.PHONY: test_clean
+test_clean:
+	$(MAKE) clean -C test
