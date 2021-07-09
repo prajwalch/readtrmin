@@ -19,14 +19,14 @@ readtrmin_int(long *pointer_arg, size_t max_input_len)
   assert(pointer_arg != NULL);
   assert(max_input_len < INT_MAX_BUFFER_SIZE);
 
+  if (max_input_len >= INT_MAX_BUFFER_SIZE)
+    max_input_len = INT_MAX_BUFFER_SIZE - 1; 
+
   char buffer[INT_MAX_BUFFER_SIZE];
   clear_buffer(buffer, INT_MAX_BUFFER_SIZE);
 
   size_t buffer_length = 0;
   size_t input_length = max_input_len + NULL_BYTE;
-
-  if (input_length > INT_MAX_BUFFER_SIZE)
-    input_length = INT_MAX_BUFFER_SIZE - 1; 
 
   if (!get_input(buffer, input_length))
     return false;
