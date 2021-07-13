@@ -25,6 +25,7 @@ readtrmin_int(long *pointer_arg, size_t max_input_len)
     char buffer[INT_MAX_BUFFER_SIZE];
     clear_buffer(buffer, INT_MAX_BUFFER_SIZE);
 
+    char *error_msg = "";
     size_t buffer_length = 0;
     size_t input_length = max_input_len + NULL_BYTE;
 
@@ -40,8 +41,8 @@ readtrmin_int(long *pointer_arg, size_t max_input_len)
     }
 
     if (is_null_input(buffer)) {
-        print_error("expected some input but found nothing");
-        return false;
+        error_msg = "expected some input but found nothing";
+        goto RETURN_FAILURE;
     }
 
     errno = 0;
@@ -49,17 +50,21 @@ readtrmin_int(long *pointer_arg, size_t max_input_len)
     long converted_buffer = strtol(buffer, &endPtr, 10);
 
     if (errno != 0) {
-        print_error("unable to convert the buffer into number");
-        return false;
+        error_msg = "unable to convert the buffer into number";
+        goto RETURN_FAILURE;
     }
 
     if (strcmp(endPtr, buffer) == 0) {
-        print_error("unable to find valid data that can be convert into numbers");
-        return false;
+        error_msg = "unable to find valid data that can be convert into numbers";
+        goto RETURN_FAILURE;
     }
 
     *pointer_arg = converted_buffer;
     return true;
+
+RETURN_FAILURE:
+    print_error(error_msg);
+    return false;
 }
 
 bool
@@ -76,6 +81,7 @@ readtrmin_string(char *buffer_arg,
         max_input_len = buffer_size - 1;
 
     clear_buffer(buffer_arg, buffer_size);
+    char *error_msg = "";
     size_t buffer_length = 0;
     size_t input_length = max_input_len + NULL_BYTE;
 
@@ -94,9 +100,8 @@ readtrmin_string(char *buffer_arg,
     }
 
     if (is_null_input(buffer_arg)) {
-        print_error("expected some input but found nothing");
-        clear_buffer(buffer_arg, buffer_size);
-        return false;
+        error_msg = "expected some input but found nothing";
+        goto RETURN_FAILURE;
     }
 
     struct CharacterSets found_char_set = init_CharacterSets_struct();
@@ -104,51 +109,52 @@ readtrmin_string(char *buffer_arg,
 
     if (!string_option->allow_space) {
         if (found_char_set.space) {
-            print_error("spaces are not allowed");
-            clear_buffer(buffer_arg, buffer_size);
-            return false;
+            error_msg = "spaces are not allowed";
+            goto RETURN_FAILURE;
         }
     }
 
     if (!string_option->allow_number) {
         if (found_char_set.number) {
-            print_error("numbers are not allowed");
-            clear_buffer(buffer_arg, buffer_size);
-            return false;
+            error_msg = "numbers are not allowed";
+            goto RETURN_FAILURE;
         }
     }
 
     if (!string_option->allow_symbol) {
         if (found_char_set.symbol) {
-            print_error("special characters are not allowed");
-            clear_buffer(buffer_arg, buffer_size);
-            return false;
+            error_msg = "special characters are not allowed";
+            goto RETURN_FAILURE;
         }
     }
 
     if (!string_option->allow_uppercase) {
         if (found_char_set.uppercase) {
-            print_error("uppercase are not allowed, as it is disabled on option");
-            clear_buffer(buffer_arg, buffer_size);
-            return false;
+            error_msg = "uppercase are not allowed, as it is disabled on option";
+            goto RETURN_FAILURE;
         }
     }
 
     if (!string_option->allow_lowercase) {
         if (found_char_set.lowercase) {
-            print_error("lowecase are not allowed, as it is disabled on option");
-            clear_buffer(buffer_arg, buffer_size);
-            return false;
+            error_msg = "lowecase are not allowed, as it is disabled on option";
+            goto RETURN_FAILURE;
         }
     }
 
     return true;
+
+RETURN_FAILURE:
+    print_error(error_msg);
+    clear_buffer(buffer_arg, buffer_size);
+    return false;
 }
 
 bool
 readtrmin_char(char *pointer_arg)
 {
     *pointer_arg = 0;
+    char *error_msg = "";
     char buffer[MIN_BUFFER_SIZE];
     clear_buffer(buffer, MIN_BUFFER_SIZE);
 
@@ -164,17 +170,21 @@ readtrmin_char(char *pointer_arg)
     }
 
     if (is_null_input(buffer)) {
-        print_error("expected some input but found nothing");
-        return false;
+        error_msg = "expected some input but found nothing";
+        goto RETURN_FAILURE;
     }
 
     if (!isalpha(buffer[0])) {
-        print_error("other then alphabet are not allowed");
-        return false;
+        error_msg = "other then alphabet are not allowed";
+        goto RETURN_FAILURE;
     }
 
     assert(isalpha(buffer[0]));
     assert(buffer[1] == '\0');
     *pointer_arg = buffer[0];
     return true;
+
+RETURN_FAILURE:
+    print_error(error_msg);
+    return false;
 }
