@@ -3,7 +3,7 @@
 
 ## Requirements
 * make
-* clang (v9.0.0 or above)
+* clang (v9.0.0 or above) or gcc
 
 ## Key Features
 * String reading options to allow or disallow certain things like:
