@@ -64,7 +64,7 @@ int main(int argc, char **argv)
      * StringOptions *option (it is defined on the header file)
    */
    
-   readtrmin_string(your_buffer, 5, 4, &default_string_option);
+   readtrmin_string(your_buffer, 5, 4, &default_stringoption);
    // print it
    printf("%s\n", your_buffer);
 }
