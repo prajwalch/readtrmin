@@ -17,4 +17,13 @@ int main(void)
     long lg_int = 0;
     readtrmin_int(&lg_int, 9);
     printf("%li\n", lg_int);
+
+    printf("_____loop test\n");
+    bool loop_char_passed = false;
+    char loop_single_char = 0;
+    
+    do {
+        loop_char_passed = readtrmin_char(&loop_single_char);
+    } while (!loop_char_passed);
+    printf("%c\n", loop_single_char);
 }
