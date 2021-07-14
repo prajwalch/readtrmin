@@ -18,7 +18,7 @@ int main(void)
     readtrmin_int(&lg_int, 9);
     printf("%li\n", lg_int);
 
-    printf("_____loop test\n");
+    printf("_____single char loop test\n");
     bool loop_char_passed = false;
     char loop_single_char = 0;
     
