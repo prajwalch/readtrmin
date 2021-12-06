@@ -29,10 +29,8 @@ search_character_sets(const char *buffer,
                       size_t buffer_length,
                       struct CharacterSets *character_set)
 {
-    int ch = 0;
-    for (size_t index = 0; index < buffer_length;
-         index += 1) {
-        ch = buffer[index];
+    for (size_t i = 0; i < buffer_length; ++i) {
+        int ch = buffer[i];
 
         if (isspace(ch)) {
             // don't re-assign the found indicator i.e true
@@ -97,26 +95,23 @@ set_null_terminator(char *buffer, size_t index)
     buffer[index] = '\0';
 }
 
+// return index if LF is found otherwise return buffer_size + 1
 static size_t
-find_LF_index(const char *buffer, size_t buffer_size)
+search_LF_index(const char *buffer, size_t buffer_size)
 {
-    for (size_t index = 0;
-         index < buffer_size; index++) {
+    for (size_t index = 0; index < buffer_size; ++index) {
         if (buffer[index] == '\n')
             return index;
     }
-    // \n not found
     return buffer_size + 1;
 }
 
 size_t
-replace_LF_with_NUL(char *buffer,
-                    size_t buffer_size,
-                    size_t expected_LF_index)
+replace_LF_with_NUL(char *buffer, size_t buffer_size, size_t expected_LF_index)
 {
-    size_t found_LF_index = find_LF_index(buffer,buffer_size);
+    size_t found_LF_index = search_LF_index(buffer, buffer_size);
 
-    // find_LF_index will return buffer_size + 1 if line feed isn't on the buffer
+    // search_LF_index will return buffer_size + 1 if LF not found on the buffer
     if (found_LF_index > buffer_size) {
         // remove all buffer left in the stdin
         flush_input_buffer();
@@ -134,16 +129,6 @@ replace_LF_with_NUL(char *buffer,
 
     set_null_terminator(buffer, found_LF_index);
     return found_LF_index;
-}
-
-bool
-has_buffer_overflow(const char *buffer,
-                    size_t buffer_size)
-{
-    char last_byte = buffer[buffer_size - 1];
-    if (last_byte != 0 && last_byte != '\n')
-        return true;
-    return false;
 }
 
 bool

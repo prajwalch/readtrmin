@@ -1,4 +1,3 @@
-#define READTRMIN_NSTRINGOPTIONS_COLL
 #include "readtrmin.h"
 
 #include <assert.h>
@@ -9,42 +8,39 @@
 
 #include "str_util.h"
 
-#define NULL_BYTE 1
-#define MIN_BUFFER_SIZE 2
-#define INT_MAX_BUFFER_SIZE 10
+#define CHAR_MAX_BUF_SIZE 2
+#define INT_MAX_BUF_SIZE 10
+
+#define ADJUST_INPUT_LEN(input_len, buf_size) \
+    do { \
+        if (input_len > buf_size) { \
+            input_len = buf_size; \
+        } else if ((input_len + 1) <= buf_size) { \
+            input_len += 1; \
+        } \
+    } while (0)
 
 bool
 readtrmin_int(long *pointer_arg, size_t max_input_len)
 {
     assert(pointer_arg != NULL);
-    assert(max_input_len < INT_MAX_BUFFER_SIZE);
+    assert(max_input_len < INT_MAX_BUF_SIZE);
 
-    if (max_input_len >= INT_MAX_BUFFER_SIZE)
-        max_input_len = INT_MAX_BUFFER_SIZE - 1;
+    ADJUST_INPUT_LEN(max_input_len, INT_MAX_BUF_SIZE);
 
-    char buffer[INT_MAX_BUFFER_SIZE];
-    clear_buffer(buffer, INT_MAX_BUFFER_SIZE);
+    char buffer[INT_MAX_BUF_SIZE] = {0};
+    char *error_msg = NULL;
 
-    char *error_msg = "";
-    size_t buffer_length = 0;
-    size_t input_length = max_input_len + NULL_BYTE;
-
-    if (!get_input(buffer, input_length))
+    if (!get_input(buffer, max_input_len))
         return false;
 
-    if (has_buffer_overflow(buffer, INT_MAX_BUFFER_SIZE)) {
-        flush_input_buffer();
-        set_null_terminator(buffer, input_length - 1);
-        buffer_length = input_length - 1;
-    } else {
-        buffer_length = replace_LF_with_NUL(buffer, input_length, input_length - 1);
-    }
+    max_input_len -= 1;
+    replace_LF_with_NUL(buffer, max_input_len, max_input_len);
 
     if (is_null_input(buffer)) {
         error_msg = "expected some input but found nothing";
         goto RETURN_FAILURE;
     }
-
     errno = 0;
     char *endPtr = NULL;
     long converted_buffer = strtol(buffer, &endPtr, 10);
@@ -58,7 +54,6 @@ readtrmin_int(long *pointer_arg, size_t max_input_len)
         error_msg = "unable to find valid data that can be convert into numbers";
         goto RETURN_FAILURE;
     }
-
     *pointer_arg = converted_buffer;
     return true;
 
@@ -74,38 +69,24 @@ readtrmin_string(char *buffer_arg,
                  StringOptions *string_option)
 {
     assert(buffer_arg != NULL);
-    assert(max_input_len < buffer_size);
     assert(string_option != NULL);
-
-    if (max_input_len >= buffer_size)
-        max_input_len = buffer_size - 1;
-
+    
+    char *error_msg = NULL;
     clear_buffer(buffer_arg, buffer_size);
-    char *error_msg = "";
-    size_t buffer_length = 0;
-    size_t input_length = max_input_len + NULL_BYTE;
+    ADJUST_INPUT_LEN(max_input_len, buffer_size);
 
-    if (!get_input(buffer_arg, input_length))
+    if (!get_input(buffer_arg, max_input_len))
         return false;
 
-    if (has_buffer_overflow(buffer_arg, buffer_size)) {
-        flush_input_buffer();
-        set_null_terminator(buffer_arg, input_length - 1);
-        buffer_length = input_length - 1;
-    }
-    else {
-        // it will return num of items it found on buffer if new line is found
-        // else it will return expected index we passed to it
-        buffer_length = replace_LF_with_NUL(buffer_arg, input_length, input_length - 1);
-    }
+    max_input_len -= 1; // uncount null terminator
+    replace_LF_with_NUL(buffer_arg, max_input_len, max_input_len);
 
     if (is_null_input(buffer_arg)) {
         error_msg = "expected some input but found nothing";
         goto RETURN_FAILURE;
     }
-
     struct CharacterSets found_char_set = init_CharacterSets_struct();
-    search_character_sets(buffer_arg, buffer_length, &found_char_set);
+    search_character_sets(buffer_arg, strlen(buffer_arg), &found_char_set);
 
     if (!string_option->allow_space) {
         if (found_char_set.space) {
@@ -141,12 +122,11 @@ readtrmin_string(char *buffer_arg,
             goto RETURN_FAILURE;
         }
     }
-
     return true;
 
 RETURN_FAILURE:
-    print_error(error_msg);
     clear_buffer(buffer_arg, buffer_size);
+    print_error(error_msg);
     return false;
 }
 
@@ -154,20 +134,13 @@ bool
 readtrmin_char(char *pointer_arg)
 {
     *pointer_arg = 0;
-    char *error_msg = "";
-    char buffer[MIN_BUFFER_SIZE];
-    clear_buffer(buffer, MIN_BUFFER_SIZE);
+    char *error_msg = NULL;
+    char buffer[CHAR_MAX_BUF_SIZE] = {0};
 
-    if(!get_input(buffer, MIN_BUFFER_SIZE)) {
+    if(!get_input(buffer, CHAR_MAX_BUF_SIZE)) {
         return false;
     }
-
-    if (has_buffer_overflow(buffer, MIN_BUFFER_SIZE)) {
-        flush_input_buffer();
-        set_null_terminator(buffer, 1);
-    } else {
-        replace_LF_with_NUL(buffer, MIN_BUFFER_SIZE, 1);
-    }
+    replace_LF_with_NUL(buffer, CHAR_MAX_BUF_SIZE, 1);
 
     if (is_null_input(buffer)) {
         error_msg = "expected some input but found nothing";
@@ -178,7 +151,6 @@ readtrmin_char(char *pointer_arg)
         error_msg = "other then alphabet are not allowed";
         goto RETURN_FAILURE;
     }
-
     assert(isalpha(buffer[0]));
     assert(buffer[1] == '\0');
     *pointer_arg = buffer[0];
