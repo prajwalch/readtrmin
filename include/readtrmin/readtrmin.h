@@ -4,11 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "stringoptions_type.h"
-
-#ifndef READTRMIN_NSTRINGOPTIONS_COLL
-#include "stringoptions_coll.h"
-#endif // READTRMIN_NSTRINGOPTIONS_COLL
+#include "stringoptions.h"
 
 bool
 readtrmin_char(char *pointer_arg);

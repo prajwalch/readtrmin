@@ -10,7 +10,7 @@ int main(void)
 
     printf("____string\n");
     char string[5];
-    readtrmin_string(string, 5, 3, &default_stringoption);
+    readtrmin_string(string, 5, 4, &readtrmin_stropts_default);
     printf("%s\n", string);
 
     printf("____int\n");
